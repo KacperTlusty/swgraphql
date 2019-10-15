@@ -1,141 +1,105 @@
-const { ApolloServer, gql } = require('apollo-server')
-const { find, filter } = require('lodash')
+const { ApolloServer } = require('apollo-server')
 const StarWarsAPI = require('./swapi')
+const typeDefs = require('./types')
 
+const getFilms = async (_source, _, { dataSources }) => {
+  return await Promise.all(_source.films.map(async (url) => {
+    return await dataSources.starWarsAPI.getByUrl(url)
+  }))
+}
 
-const typeDefs = gql`
-  type People {
-    birth_year: String,
-    eye_color: String,
-    films: [Film],
-    gender: String,
-    hair_color: String,
-    height: String,
-    homeworld: String,
-    mass: String,
-    name: String,
-    skin_color: String,
-    created: String,
-    edited: String,
-    species: [Species],
-    starships: [Starship],
-    url: String,
-    vehicles: [Vehicle]
-  }
+const getPilots = async (_source, _, { dataSources }) => {
+  return await Promise.all(_source.pilots.map(async (url) => {
+    return await dataSources.starWarsAPI.getByUrl(url);
+  }));
+}
 
-  type Film {
-    characters: [People],
-    created: String,
-    director: String,
-    edited: String,
-    episode_id: Int,
-    opening_crawl: String,
-    planets: [Planet],
-    producer: String,
-    release_date: String,
-    species: [Species],
-    starships: [Starship],
-    title: String,
-    url: String,
-    vehicles: [Vehicle]
-  }
+const getPeople = async (_source, _, { dataSources }) => {
+  return await Promise.all(_source.people.map(async (url) => {
+    return await dataSources.starWarsAPI.getByUrl(url);
+  }));
+}
 
-  type Starship {
-    MGLT: String,
-    cargo_capacity: String,
-    cost_in_credits: String,
-    created: String,
-    crew: String,
-    edited: String,
-    hyperdrive_rating: String,
-    length: String,
-    manufacturer: String,
-    max_athosphering_speed: String,
-    model: String,
-    name: String,
-    passengers: String,
-    films: [Film],
-    pilots: [People],
-    starship_class: String,
-    url: String
-  }
+const getSpecies = async (_source, _, { dataSources }) => {
+  return await Promise.all(_source.species.map(async (url) => {
+    return await dataSources.starWarsAPI.getByUrl(url)
+  }))
+}
 
-  type Vehicle {
-    cargo_capacity: String,
-    consumables: String,
-    cost_in_credits: String,
-    created: String,
-    crew: String,
-    edited: String,
-    length: String,
-    manufacturer: String,
-    max_athosphering_speed: String,
-    model: String,
-    name: String,
-    passengers: String,
-    pilots: [People],
-    films: [Film],
-    url: String,
-    vehicle_class: String,
-  }
+const getVehicles = async (_source, _, { dataSources }) => {
+  return await Promise.all(_source.vehicles.map(async (url) => {
+    return await dataSources.starWarsAPI.getByUrl(url)
+  }))
+}
 
-  type Species {
-    average_height: String,
-    average_lifespan: String,
-    classification: String,
-    created: String,
-    designation: String,
-    edited: String,
-    eye_colors: String,
-    hair_colors: String,
-    homeworld: Planet,
-    language: String,
-    name: String,
-    people: [People],
-    films: [Film],
-    skin_colors: String,
-    url: String
-  }
-
-  type Planet {
-    climate: String,
-    created: String,
-    diameter: String,
-    edited: String,
-    films: [Film],
-    gravity: String,
-    name: String,
-    orbital_period: String,
-    population: String,
-    residents: [People],
-    rotation_period: String,
-    surface_water: String,
-    terrain: String,
-    url: String
-  }
-
-  type Query {
-    planets: [Planet],
-    planet(name: String!): Planet,
-    people: [People],
-    species: [Species],
-    vehicles: [Vehicle],
-    films: [Film],
-    starships: [Starship]
-  }
-`
+const getStarships = async (_source, _, { dataSources }) => {
+  return await Promise.all(_source.starships.map(async (url) => {
+    return await dataSources.starWarsAPI.getByUrl(url)
+  }))
+}
 
 const resolvers = {
   Query: {
-    planets: async (_source, _, { dataSources }) => {
+    planets: async (_source, d, { dataSources }) => {
       return dataSources.starWarsAPI.getPlanets();
     },
     planet: async(_source, { name }, { dataSources }) => {
       return dataSources.starWarsAPI.getPlanetByName(name)
     },
-    people: async(_source, { name }, { dataSources }) => {
-      return dataSources.starWarsAPI.getPeople()
+    characters: async(_source, { name = '' }, { dataSources }) => {
+      return dataSources.starWarsAPI.getCharacters(name)
+    },
+    character: async(_source, { id }, { dataSources }) => {
+      return dataSources.starWarsAPI.getCharacterById(id)
     }
+  },
+  Planet: {
+    residents: async (_source, _, { dataSources }) => {
+      return await Promise.all(_source.residents.map(async (url) => {
+        return await dataSources.starWarsAPI.getByUrl(url)
+      }))
+    },
+    films: getFilms
+  },
+  Character: {
+    homeworld: async (_source, _, { dataSources }) => {
+      return await dataSources.starWarsAPI.getByUrl(_source.homeworld)
+    },
+    films: getFilms,
+    species: getSpecies,
+    starships: async (_source, _, { dataSources }) => {
+      return await Promise.all(_source.starships.map(async (url) => {
+        return await dataSources.starWarsAPI.getByUrl(url)
+      }))
+    },
+    vehicles: getVehicles
+  },
+  Film: {
+    characters: async (_source, _, { dataSources }) => {
+      return await Promise.all(_source.characters.map(async (url) => {
+        return await dataSources.starWarsAPI.getByUrl(url)
+      }))
+    },
+    planets: async (_source, _, { dataSources }) => {
+      return await Promise.all(_source.planets.map(async (url) => {
+        return await dataSources.starWarsAPI.getByUrl(url)
+      }))
+    },
+    species: getSpecies,
+    starships: getStarships,
+    vehicles: getVehicles
+  },
+  Starship: {
+    films: getFilms,
+    pilots: getPilots
+  },
+  Vehicle: {
+    films: getFilms,
+    pilots: getPilots
+  },
+  Species: {
+    films: getFilms,
+    people: getPeople
   }
 }
 
@@ -146,7 +110,7 @@ const server = new ApolloServer({
     return {
       starWarsAPI: new StarWarsAPI(),
     }
-  }
+  },
 })
 
 server.listen().then((info) => {

@@ -132,7 +132,10 @@ const resolvers = {
     },
     planet: async(_source, { name }, { dataSources }) => {
       return dataSources.starWarsAPI.getPlanetByName(name)
-    } 
+    },
+    people: async(_source, { name }, { dataSources }) => {
+      return dataSources.starWarsAPI.getPeople()
+    }
   }
 }
 

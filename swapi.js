@@ -1,5 +1,15 @@
 const { RESTDataSource } = require('apollo-datasource-rest')
 
+const fetchNext = async (caller, response) => {
+  let results = []
+  if (response.next) {
+    const res = await caller.get(`people/?${response.next.slice(response.next.indexOf('?'))}`)
+    results = await fetchNext(caller, res)
+  }
+
+  return [...response.results, ...results]
+}
+
 class StarWarsAPI extends RESTDataSource {
   constructor() {
     super()
@@ -7,7 +17,6 @@ class StarWarsAPI extends RESTDataSource {
   }
 
   async getPlanets() {
-    console.log(await this.get('/planets'))
     const response = await this.get('planets/')
     return response.results
   }
@@ -19,6 +28,11 @@ class StarWarsAPI extends RESTDataSource {
   async getPlanetByName(name) {
     const response = await this.get(`planets/?search=${name}`)
     return response.results[0]
+  }
+
+  async getPeople() {
+    const response = await this.get('/people')
+    return fetchNext(this, response)
   }
 }
 

@@ -1,0 +1,26 @@
+{
+  "name": "apollo-server-test",
+  "version": "1.0.0",
+  "description": "apollo-server-test",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/kacpertlusty/apollo-server-test.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/kacpertlusty/apollo-server-test/issues"
+  },
+  "homepage": "https://gitlab.com/kacpertlusty/apollo-server-test#readme",
+  "dependencies": {
+    "apollo-datasource-rest": "^0.6.5",
+    "apollo-server": "^2.9.6",
+    "graphql": "^14.5.8",
+    "lodash": "^4.17.15"
+  }
+}

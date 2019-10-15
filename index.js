@@ -116,6 +116,7 @@ const typeDefs = gql`
 
   type Query {
     planets: [Planet],
+    planet(name: String!): Planet,
     people: [People],
     species: [Species],
     vehicles: [Vehicle],
@@ -128,7 +129,10 @@ const resolvers = {
   Query: {
     planets: async (_source, _, { dataSources }) => {
       return dataSources.starWarsAPI.getPlanets();
-    }
+    },
+    planet: async(_source, { name }, { dataSources }) => {
+      return dataSources.starWarsAPI.getPlanetByName(name)
+    } 
   }
 }
 

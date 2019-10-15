@@ -8,8 +8,17 @@ class StarWarsAPI extends RESTDataSource {
 
   async getPlanets() {
     console.log(await this.get('/planets'))
-    const response = await this.get(`planets/`)
+    const response = await this.get('planets/')
     return response.results
+  }
+
+  async getPlanet(id) {
+    return this.get(`planets/${id}/`)
+  }
+
+  async getPlanetByName(name) {
+    const response = await this.get(`planets/?search=${name}`)
+    return response.results[0]
   }
 }
 

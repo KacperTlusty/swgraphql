@@ -112,14 +112,14 @@ type Planet {
 }
 
 type Query {
-  planets: [Planet],
-  planet(name: String!): Planet,
-  character(id: ID!): Character,
+  planets(name: String): [Planet],
+  planet(url: String!): Planet,
+  character(url: String): Character,
   characters(name: String): [Character],
-  species: [Species],
-  vehicles: [Vehicle],
-  films: [Film],
-  starships: [Starship]
+  species(name: String): [Species],
+  vehicles(name: String): [Vehicle],
+  films(name: String): [Film],
+  starships(name: String): [Starship]
 }
 `
 

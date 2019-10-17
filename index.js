@@ -40,17 +40,29 @@ const getStarships = async (_source, _, { dataSources }) => {
 
 const resolvers = {
   Query: {
-    planets: async (_source, d, { dataSources }) => {
-      return dataSources.starWarsAPI.getPlanets();
+    planets: async (_source, { name = '' }, { dataSources }) => {
+      return dataSources.starWarsAPI.getPlanetsByName(name);
     },
-    planet: async(_source, { name }, { dataSources }) => {
-      return dataSources.starWarsAPI.getPlanetByName(name)
+    planet: async(_source, { url }, { dataSources }) => {
+      return dataSources.starWarsAPI.getByUrl(url)
     },
     characters: async(_source, { name = '' }, { dataSources }) => {
       return dataSources.starWarsAPI.getCharacters(name)
     },
     character: async(_source, { id }, { dataSources }) => {
       return dataSources.starWarsAPI.getCharacterById(id)
+    },
+    films: async(_source, { name = '' }, { dataSources }) => {
+      return dataSources.starWarsAPI.getFilmByName(name)
+    },
+    species: async(_source, { name = '' }, { dataSources }) => {
+      return dataSources.starWarsAPI.getSpeciesByName(name)
+    },
+    starships: async(_source, { name = '' }, { dataSources }) => {
+      return dataSources.starWarsAPI.getStarshipsByName(name)
+    },
+    vehicles: async(_source, { name ='' }, { dataSources }) => {
+      return dataSources.starWarsAPI.getVehicles(name)
     }
   },
   Planet: {

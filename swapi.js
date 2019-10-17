@@ -18,14 +18,9 @@ class StarWarsAPI extends RESTDataSource {
     return [...response.results, ...results]  
   }
 
-  async getPlanets() {
-    const response = await this.get('planets/')
-    return this.fetchNext(response, 'planets/?')
-  }
-
-  async getPlanetByName(name) {
+  async getPlanetsByName(name) {
     const response = await this.get(`planets/?search=${name}`)
-    return response.results[0]
+    return this.fetchNext(response, 'planets/?')
   }
 
   async getByUrl(url) {
@@ -34,11 +29,31 @@ class StarWarsAPI extends RESTDataSource {
 
   async getPeople() {
     const response = await this.get('people/')
-    return fetchNext(response, 'people/?')
+    return this.fetchNext(response, 'people/?')
   }
 
   async getCharacterById(id) {
     return await this.get(`people/${id}`)
+  }
+
+  async getSpeciesByName(name) {
+    const response = await this.get(`species/?search=${name}`)
+    return this.fetchNext(response, 'species/?')
+  }
+
+  async getStarshipsByName(name) {
+    const response = await this.get(`starships/?search=${name}`)
+    return this.fetchNext(response, 'starships/?')
+  }
+
+  async getVehiclesByName(name) {
+    const response = await this.get(`vehicles/?search=${name}`)
+    return this.fetchNext(response, 'vehicles/?')
+  }
+
+  async getFilmsByName(name) {
+    const response = await this.get(`films/?search=${name}`)
+    return this.fetchNext(response, 'films/?')
   }
 
   async getCharacters(name) {

@@ -47,7 +47,7 @@ const resolvers = {
       return dataSources.starWarsAPI.getByUrl(url)
     },
     characters: async(_source, { name = '' }, { dataSources }) => {
-      return dataSources.starWarsAPI.getCharacters(name)
+      return dataSources.starWarsAPI.getCharactersByName(name)
     },
     character: async(_source, { id }, { dataSources }) => {
       return dataSources.starWarsAPI.getCharacterById(id)

@@ -56,10 +56,9 @@ class StarWarsAPI extends RESTDataSource {
     return this.fetchNext(response, 'films/?')
   }
 
-  async getCharacters(name) {
+  async getCharactersByName(name) {
     const response = await this.get(`people/?search=${name}`)
-    const results = await fetchNext(this, response, `people/?search=${name}&`)
-    return results
+    return this.fetchNext(response, 'people/?')
   }
 
   sliceUrl(url) {
